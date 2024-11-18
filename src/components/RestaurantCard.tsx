@@ -24,8 +24,7 @@ export function RestaurantCard({ restaurant, userLocation }: Props) {
 
   const getDirectionsUrl = () => {
     const origin = `${userLocation.latitude},${userLocation.longitude}`;
-    const destination = `${restaurant.id}`;
-    return `https://www.google.com/maps/dir/?api=1&origin=${origin}&destination=${destination}&destination_place_id=${destination}&travelmode=walking`;
+    return `https://www.google.com/maps/dir/?api=1&origin=${origin}&destination=${restaurant.id}&destination_place_id=${restaurant.id}&travelmode=walking`;
   };
 
   return (

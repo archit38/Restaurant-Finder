@@ -10,7 +10,7 @@ interface Props {
 
 export function ReviewsModal({ restaurant, isOpen, onClose }: Props) {
   if (!isOpen) return null;
-
+  console.log(restaurant);
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex justify-end">
       <div className="bg-white w-full max-w-md h-full overflow-y-auto">
@@ -29,6 +29,57 @@ export function ReviewsModal({ restaurant, isOpen, onClose }: Props) {
             <span className="text-2xl font-bold ml-2">{restaurant.rating.toFixed(1)}</span>
             <span className="text-gray-500 ml-2">({restaurant.reviews} reviews)</span>
           </div>
+
+          {restaurant.topReviews && (
+            <div className="mb-6">
+              <div className="mb-4">
+                <h3 className="text-lg font-semibold mb-2">Top Reviews</h3>
+                {restaurant.topReviews.positive.map((review, index) => (
+                  <div key={index} className="bg-gray-50 p-3 rounded-lg mb-2">
+                    <div className="flex items-center mb-1">
+                      <div className="flex">
+                        {[...Array(5)].map((_, i) => (
+                          <Star
+                            key={i}
+                            className={`w-4 h-4 ${
+                              i < review.rating ? 'text-yellow-400' : 'text-gray-300'
+                            } fill-current`}
+                          />
+                        ))}
+                      </div>
+                      <span className="text-sm text-gray-600 ml-2">{review.author}</span>
+                    </div>
+                    <p className="text-sm">{review.text}</p>
+                    <span className="text-xs text-gray-500">{review.time}</span>
+                  </div>
+                ))}
+              </div>
+
+              <div className="mb-4">
+                <h3 className="text-lg font-semibold mb-2">Critical Reviews</h3>
+                {restaurant.topReviews.negative.map((review, index) => (
+                  <div key={index} className="bg-gray-50 p-3 rounded-lg mb-2">
+                    <div className="flex items-center mb-1">
+                      <div className="flex">
+                        {[...Array(5)].map((_, i) => (
+                          <Star
+                            key={i}
+                            className={`w-4 h-4 ${
+                              i < review.rating ? 'text-yellow-400' : 'text-gray-300'
+                            } fill-current`}
+                          />
+                        ))}
+                      </div>
+                      <span className="text-sm text-gray-600 ml-2">{review.author}</span>
+                    </div>
+                    <p className="text-sm">{review.text}</p>
+                    <span className="text-xs text-gray-500">{review.time}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
           <a
             href={`https://www.google.com/maps/place/?q=place_id:${restaurant.id}`}
             target="_blank"

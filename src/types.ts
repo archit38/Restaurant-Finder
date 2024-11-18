@@ -1,3 +1,9 @@
+export interface Review {
+  text: string;
+  rating: number;
+  author: string;
+  time: string;
+}
 export interface Restaurant {
   id: string;
   name: string;
@@ -9,6 +15,10 @@ export interface Restaurant {
   priceLevel: number;
   address: string;
   isOpen: boolean;
+  topReviews?: {
+    positive: Review[];
+    negative: Review[];
+  };
 }
 
 export interface Location {

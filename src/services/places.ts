@@ -65,7 +65,7 @@ async function getRestaurantDetails(
     service.getDetails(
       {
         placeId: place.place_id!,
-        fields: ['name', 'rating', 'user_ratings_total', 'formatted_address', 'price_level', 'photos', 'types']
+        fields: ['name', 'rating', 'user_ratings_total', 'formatted_address', 'price_level', 'photos', 'types', 'reviews']
       },
       (result, status) => {
         if (status !== google.maps.places.PlacesServiceStatus.OK || !result) {
@@ -81,6 +81,31 @@ async function getRestaurantDetails(
           userLatLng
         );
 
+         // Process reviews
+         const reviews = result.reviews || [];
+         const topReviews = {
+           positive: reviews
+             .filter(review => review.rating && review.rating >= 4)
+             .sort((a, b) => (b.rating || 0) - (a.rating || 0))
+             .slice(0, 3)
+             .map(review => ({
+               text: review.text,
+               rating: review.rating || 0,
+               author: review.author_name,
+               time: new Date(review.time * 1000).toLocaleDateString()
+             })),
+           negative: reviews
+             .filter(review => review.rating && review.rating <= 3)
+             .sort((a, b) => (a.rating || 0) - (b.rating || 0))
+             .slice(0, 3)
+             .map(review => ({
+               text: review.text,
+               rating: review.rating || 0,
+               author: review.author_name,
+               time: new Date(review.time * 1000).toLocaleDateString()
+             }))
+         };
+
         const restaurant: Restaurant = {
           id: place.place_id!,
           name: result.name!,
@@ -91,7 +116,8 @@ async function getRestaurantDetails(
           cuisine: getCuisineType(result.types || []),
           priceLevel: result.price_level || 1,
           address: result.formatted_address || '',
-          isOpen: true // We already filtered for open restaurants in the initial search
+          isOpen: true,
+          topReviews
         };
 
         resolve(restaurant);
