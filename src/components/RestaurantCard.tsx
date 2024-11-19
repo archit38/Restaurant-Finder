@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Star, MapPin, DollarSign, Navigation2 } from 'lucide-react';
 import type { Restaurant } from '../types';
 import { ReviewsModal } from './ReviewsModal';
+import { MapModal } from './MapModal';
 
 interface Props {
   restaurant: Restaurant;
@@ -10,6 +11,7 @@ interface Props {
 
 export function RestaurantCard({ restaurant, userLocation }: Props) {
   const [showReviews, setShowReviews] = useState(false);
+  const [showMap, setShowMap] = useState(false);
 
   const renderPriceLevel = (level: number) => {
     return Array(level)
@@ -20,11 +22,6 @@ export function RestaurantCard({ restaurant, userLocation }: Props) {
           className="w-4 h-4 text-green-600 inline-block"
         />
       ));
-  };
-
-  const getDirectionsUrl = () => {
-    const origin = `${userLocation.latitude},${userLocation.longitude}`;
-    return `https://www.google.com/maps/dir/?api=1&origin=${origin}&destination=${restaurant.id}&destination_place_id=${restaurant.id}&travelmode=walking`;
   };
 
   return (
@@ -59,15 +56,13 @@ export function RestaurantCard({ restaurant, userLocation }: Props) {
           </div>
           <div className="flex justify-between items-center">
             <div>{renderPriceLevel(restaurant.priceLevel)}</div>
-            <a
-              href={getDirectionsUrl()}
-              target="_blank"
-              rel="noopener noreferrer"
+            <button
+              onClick={() => setShowMap(true)}
               className="flex items-center text-blue-500 hover:text-blue-600 transition-colors"
             >
               <Navigation2 className="w-4 h-4 mr-1" />
               <span className="text-sm font-medium">Walking Directions</span>
-            </a>
+            </button>
           </div>
         </div>
       </div>
@@ -75,6 +70,12 @@ export function RestaurantCard({ restaurant, userLocation }: Props) {
         restaurant={restaurant}
         isOpen={showReviews}
         onClose={() => setShowReviews(false)}
+      />
+      <MapModal
+        isOpen={showMap}
+        onClose={() => setShowMap(false)}
+        origin={{ lat: userLocation.latitude, lng: userLocation.longitude }}
+        destination={restaurant.id}
       />
     </>
   );
