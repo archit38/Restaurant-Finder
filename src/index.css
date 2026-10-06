@@ -1,9 +1,13 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import 'tailwindcss';
 
 @layer base {
   body {
     @apply antialiased text-gray-900;
+  }
+
+  /* Tailwind v4 defaults buttons to cursor: default; keep the v3 pointer behavior */
+  button:not(:disabled),
+  [role='button']:not(:disabled) {
+    cursor: pointer;
   }
 }

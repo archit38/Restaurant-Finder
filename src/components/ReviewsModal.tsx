@@ -1,4 +1,3 @@
-import React from 'react';
 import { Star, X } from 'lucide-react';
 import type { Restaurant } from '../types';
 
@@ -12,7 +11,7 @@ export function ReviewsModal({ restaurant, isOpen, onClose }: Props) {
   if (!isOpen) return null;
   console.log(restaurant);
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex justify-end">
+    <div className="fixed inset-0 bg-black/50 z-50 flex justify-end">
       <div className="bg-white w-full max-w-md h-full overflow-y-auto">
         <div className="sticky top-0 bg-white border-b border-gray-200 p-4 flex justify-between items-center">
           <h2 className="text-xl font-semibold">Reviews for {restaurant.name}</h2>
