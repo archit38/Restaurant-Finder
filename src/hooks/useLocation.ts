@@ -3,7 +3,9 @@ import type { Location } from '../types';
 
 export function useLocation() {
   const [location, setLocation] = useState<Location | null>(null);
-  const [error, setError] = useState<string>('');
+  const [error, setError] = useState<string>(() =>
+    navigator.geolocation ? '' : 'Geolocation is not supported by your browser'
+  );
 
   const updateLocation = (latitude: number, longitude: number) => {
     setLocation({ latitude, longitude });
@@ -11,10 +13,7 @@ export function useLocation() {
   };
 
   useEffect(() => {
-    if (!navigator.geolocation) {
-      setError('Geolocation is not supported by your browser');
-      return;
-    }
+    if (!navigator.geolocation) return;
 
     navigator.geolocation.getCurrentPosition(
       (position) => {

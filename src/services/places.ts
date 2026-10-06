@@ -1,4 +1,4 @@
-import { Loader } from '@googlemaps/js-api-loader';
+import { setOptions, importLibrary } from '@googlemaps/js-api-loader';
 import { GOOGLE_MAPS_API_KEY, SEARCH_RADIUS, RESULTS_COUNT } from '../config';
 import type { Location, Restaurant } from '../types';
 
@@ -7,13 +7,16 @@ let placesService: google.maps.places.PlacesService | null = null;
 export async function initPlacesService() {
   if (placesService) return placesService;
 
-  const loader = new Loader({
-    apiKey: GOOGLE_MAPS_API_KEY,
-    version: 'weekly',
-    libraries: ['places', 'geometry']
+  setOptions({
+    key: GOOGLE_MAPS_API_KEY,
+    v: 'weekly',
   });
 
-  await loader.load();
+  await Promise.all([
+    importLibrary('maps'),
+    importLibrary('places'),
+    importLibrary('geometry'),
+  ]);
   
   // Create a dummy map (required for PlacesService)
   const mapDiv = document.createElement('div');
